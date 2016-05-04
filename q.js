@@ -33,7 +33,7 @@
 		            node.style[attr] = value;
 		            break;
 		        default:
-		            return "";
+		            return false;
 		    }
 		},
 		hasClass:function(node,name,type){
