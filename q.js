@@ -90,10 +90,12 @@
 				for(var i=0;i<node.lib[type].length;i++){
 					node.removeEventListener(type,node.lib[type][i],false);
 				}
+				node.lib[type]=[];
 			}else{
 				for(var i=0;i<node.lib[type].length;i++){
 					node.detachEvent('on'+type,node.lib[type][i]);
 				}
+				node.lib[type]=[];
 				
 			}
 		},
