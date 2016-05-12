@@ -1,4 +1,4 @@
-(function(window){
+;(function(window){
 	var q={
 		ready:function(callback) {
 		    if (document.addEventListener) {
@@ -114,14 +114,17 @@
 		prev:function(node){
 			return node.previousElementSibling ? node.previousElementSibling :node.previousSibling;
 		},
-		getOffsetToBody:function(node,type){
-			var pr=0;
-			var par=node;
-			while(par){
-				pr+=par['offset'+type];
-				par=par.offsetParent;
+		getPxToBody:function (node,type){
+			var a=node.offsetParent;
+			var b=node['offset'+type];
+			while(a){
+				b+=a['offset'+type];
+				a=a.offsetParent;
 			}
-			return pr;
+			return b;
+		},
+		getPxToParent:function(node,type){
+			return this.getPxToBody(node,type)-this.getPxToBody(node.parentNode,type)
 		}
 	}
 	window.q=q;
