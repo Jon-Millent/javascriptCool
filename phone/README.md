@@ -8,14 +8,14 @@ $(element).mousedown(function(event){
 })
 ```
 ##  touchend
-** touchend -> "mouseup" **
+** touchend---mouseup **
 ```javascript
 $(element).mouseup(function(event){
   console.log(event)
 })
 ```
 ##  mousemove
-** touchmove -> "mousemove" **
+** touchmove --- mousemove **
 ```javascript
 $(element).mousemove(function(event){
   console.log(event)
