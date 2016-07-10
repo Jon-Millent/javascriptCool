@@ -85,37 +85,29 @@
 	    }
 
 	};
-	Factory.prototype.hasClass=function(name,type){
-	    var arr=this.node.className.split(' ');
-	    var isFind=false;
-	    for(var i =0;i<arr.length;i++){
-	        if(arr[i]==name){
-	            isFind=true;
-	        }
-	    }
-	    if(type){
-	        return [isFind,arr];
-	    }else{
-	        return isFind;
-	    }
+	Factory.prototype.hasClass=function(name){
+	   return  new RegExp('\\b'+name+'\\b','g').test(this.node.className);
 	};
 	Factory.prototype.addClass=function(cls){
-	    if(!this.hasClass(cls)){
-	        this.node.className+=(" "+cls);
-	    }
-	    return this;
+	   if(!this.hasClass(this.node,cls)){
+	   	if(this.node.className==''){
+	   		this.node.className=cls;
+	   	}else{
+	   		this.node.className+=' '+cls;
+	   	}
+	   }
 	};
 	Factory.prototype.removeClass=function(name){
-	    if(this.hasClass(name,true)[0]){
-	        var arr=this.hasClass(name,true)[1];
-	        for(var i=0;i<arr.length;i++){
-	            if(arr[i]==name){
-	                arr.splice(i,1);
-	            }
-	        }
-	        this.node.className=arr.join(' ');
+	    if(this.hasClass(this.node,name)){
+	    	var lastClass = new RegExp('\\s'+name+'\$');
+	    	var classname = this.node.className;
+
+	    	if(lastClass.test(this.node.className)){
+	    		 this.node.className = classname.replace(lastClass,'');
+	    	}else{
+	    		 this.node.className = classname.replace(new RegExp('\\b'+name+'\\s\*\\b','g'),'');
+	    	}
 	    }
-	    return this;
 	};
 	root.$=function(node){
 		if(typeof node=='object'){
