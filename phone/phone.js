@@ -86,19 +86,21 @@
 
 	};
 	Factory.prototype.hasClass=function(name){
+		
 	   return  new RegExp('\\b'+name+'\\b','g').test(this.node.className);
 	};
 	Factory.prototype.addClass=function(cls){
-	   if(!this.hasClass(this.node,cls)){
+	   if(!this.hasClass(cls)){
+	 
 	   	if(this.node.className==''){
 	   		this.node.className=cls;
 	   	}else{
-	   		this.node.className+=' '+cls;
+	   		this.node.className+=(' '+cls);
 	   	}
 	   }
 	};
 	Factory.prototype.removeClass=function(name){
-	    if(this.hasClass(this.node,name)){
+	    if(this.hasClass(name)){
 	    	var lastClass = new RegExp('\\s'+name+'\$');
 	    	var classname = this.node.className;
 
