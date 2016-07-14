@@ -53,7 +53,7 @@
 		this.node.lib=this.node.lib||{};
 		this.node.lib[type]=this.node.lib[type]||[];
 		var g=function(event){
-			fn(event)
+			fn.call(this,event)
 		}
 		this.node.lib[type].push(g)
 
