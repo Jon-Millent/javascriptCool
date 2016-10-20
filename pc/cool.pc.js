@@ -1,4 +1,35 @@
 ;(function(window){
+	function FactoryBoom(){
+		var data = {};
+		this.index = 1;
+		this.createFactory=function(){
+			var id = this.createId();
+			data[id] = {};
+			return id;
+		};
+		this.get = function(){
+			return data;
+		};
+		this.addRoom = function(id,dataName){
+			data[id][dataName] = data[id][dataName] || {};
+			return {
+				add:function(name,datas){
+					return data[id][dataName][name] = data[id][dataName][name] || datas;
+				},
+				remove : function(name){
+					delete data[id][dataName][name];
+				}
+			};
+		};
+		this.removeRoom = function(id,dataName){
+			delete data[id][dataName];
+		};
+	};
+	FactoryBoom.prototype.createId=function(){
+		return this.index++;
+	};
+	var fnFactory = new FactoryBoom();
+
 	var q={
 		ready:function(callback) {
 		    if (document.addEventListener) {
@@ -61,38 +92,41 @@
 		    }
 		},
 		on:function(node,type,fn){
-			node.lib=node.lib||{};
-			node.lib[type]=node.lib[type]||[];
-			node.lib[type].push(fn)
+			node.fId = node.fId || fnFactory.createFactory();
+			var fner = fnFactory.addRoom(node.fId,'fn');
+			var typeArr = fner.add(type,[]);
+			typeArr.push(fn);
 			if(node.addEventListener){
 				node.addEventListener(type,fn,false)
 			}else{
 				var tuo=function(){
 					fn.call(node)
 				}
-				node.lib[type].push(tuo)
+				typeArr.push(tuo)
 				node.attachEvent('on'+type,tuo);
 			}
+		},
+		off:function(node,type){
+			var fner = fnFactory.addRoom(node.fId,'fn');
+			var typeArr = fner.add(type,[]);
+
+			if(node.removeEventListener){
+				for(var i=0;i<typeArr.length;i++){
+					node.removeEventListener(type,typeArr[i],false);
+				}
+				
+			}else{
+				for(var i=0;i<typeArr.length;i++){
+					node.detachEvent('on'+type,typeArr[i]);
+				}	
+			}
+			fner.remove(type);
 		},
 		pao:function(e,type,fn){
 			var ev=e||window.event;
 			var tag=ev.target||ev.srcElement;
 			if(tag.tagName.toLowerCase()==type){
 				fn();
-			}
-		},
-		off:function(node,type){
-			if(node.removeEventListener){
-				for(var i=0;i<node.lib[type].length;i++){
-					node.removeEventListener(type,node.lib[type][i],false);
-				}
-				node.lib[type]=[];
-			}else{
-				for(var i=0;i<node.lib[type].length;i++){
-					node.detachEvent('on'+type,node.lib[type][i]);
-				}
-				node.lib[type]=[];
-				
 			}
 		},
 		firstChild:function(node){
