@@ -30,9 +30,6 @@
 	};
 	var fnFactory = new FactoryBoom();
 
-
-
-
 	function Factory(node){
 		this.node=node;
 	};
@@ -43,6 +40,11 @@
 				fn.call(root.node,event.targetTouches[0]);
 			}
 		})
+	};
+	Factory.prototype.mainType = {
+		'mousedown' : 'touchstart',
+		'mouseup' : 'touchend',
+		'mousemove' : 'touchmove'
 	};
 	Factory.prototype.mouseup=function(fn){
 		var root = this;
@@ -82,9 +84,8 @@
 					root.off(root.node,'scroll')
 				})	
 			}
-			
-		})
-	};
+		})	
+	};	
 	Factory.prototype.on=function(type,fn){
 		this.node.fId = this.node.fId || fnFactory.createFactory();
 		var fner = fnFactory.addRoom(this.node.fId,'fn');
@@ -92,13 +93,19 @@
 		typeArr.push(fn);
 		this.node.addEventListener(type,fn,false)
 	};
-	Factory.prototype.off=function(node,type){
-		var fner = fnFactory.addRoom(node.fId,'fn');
-		var typeArr = fner.add(type,[]);
-		for(var i=0;i<typeArr.length;i++){
-			node.removeEventListener(type,typeArr[i],false);
+	Factory.prototype.off=function(type){
+		if(type == 'scroll'){
+			
+		}else{
+			var nowType = this.mainType[type];
+			var fner = fnFactory.addRoom(this.node.fId,'fn');
+			var typeArr = fner.add(nowType,[]);
+			for(var i=0;i<typeArr.length;i++){
+				this.node.removeEventListener(nowType,typeArr[i],false);
+			}
+			fner.remove(nowType);	
 		}
-		fner.remove(type);
+		
 	};
 	Factory.prototype.css=function(attr,value) {
 	    switch (arguments.length) {
